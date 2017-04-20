@@ -9,23 +9,55 @@
  */
 package dirscanner.core;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * @author nueter
- *
- */
+import dirscanner.logic.DirScanner;
+
 public class Main {
 
-    /**
-     * @param args
-     */
     public static void main( final String[] args ) {
-
-        InputParser inputParser = new InputParser();
-        inputParser.parse( args );
-
+       
+        Map<String, String> parsedArgs = parseArgs(args);
+        
         DirScanner dirScanner = new DirScanner();
-        dirScanner.scan( inputParser );
+        dirScanner.scan( new File(parsedArgs.get("-in")), parsedArgs.get("-fileType") );
     }
-
+    
+    
+    private static Map<String, String> parseArgs(String[] args){
+    	
+    	Map<String, String> agrPairs = new HashMap<String, String>();
+    	if(args == null || args.length <= 0){
+    		//TODO ERROR
+    	} else {
+    		for (int i = 0; i < args.length; i = i +2){
+    			
+    			switch(args[i]){
+	    			case "-in":{
+	    				agrPairs.put(args[i], args[i+1]);
+	    				break;
+	    			}
+	    			case "-fileType":{
+	    				if((i+1) >= args.length){
+	    					agrPairs.put(args[i], "");
+	    				} else {
+	    					agrPairs.put(args[i], args[i+1]);
+	    				}	    				
+	    				break;
+	    			}
+	    			default: {
+	    				System.out.println("Unkown arg");
+	    				break;
+	    			}
+    			}
+    		}
+    	}
+    	
+    	if(agrPairs.isEmpty()){
+    		return null;    	
+    	}
+		return agrPairs;
+    }
 }
